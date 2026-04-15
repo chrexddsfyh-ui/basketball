@@ -1,0 +1,2102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GRND</title>
+  <meta name="theme-color" content="#050505">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="GRND">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./app-icon.svg">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f7f7;
+      --muted: #a8a8a8;
+      --paper: #050505;
+      --panel: #111111;
+      --panel-2: #171717;
+      --line: #2d2d2d;
+      --court: #ff6b2c;
+      --court-dark: #b93f15;
+      --orange-soft: #2a160e;
+      --orange-line: #8f3a16;
+      --black: #050505;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255, 107, 44, 0.18), transparent 260px),
+        linear-gradient(180deg, #111111, #050505 420px),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--court);
+      color: var(--black);
+      font-weight: 800;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    button.secondary {
+      background: #202020;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    button.good {
+      background: var(--court);
+      color: var(--black);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    main {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .app-head {
+      display: grid;
+      gap: 12px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark img {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      object-fit: cover;
+    }
+
+    .header-streak {
+      min-width: 104px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 107, 44, 0.5);
+      background: #111111;
+      text-align: right;
+    }
+
+    .header-streak span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .header-streak strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--court);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .home-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .page {
+      display: none;
+      gap: 12px;
+    }
+
+    .page.is-active {
+      display: grid;
+    }
+
+    .top-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 8px 0;
+      background: rgba(5, 5, 5, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .top-tab {
+      min-height: 48px;
+      padding: 8px 6px;
+      background: #1c1c1c;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      line-height: 1;
+    }
+
+    .top-tab.is-active {
+      background: var(--court);
+      color: var(--black);
+      border-color: var(--court);
+    }
+
+    .top-tab-icon {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+
+    .top-tab-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .top-tab-label {
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .quote-strip {
+      display: grid;
+      gap: 0;
+    }
+
+    .quote-strip .quote {
+      display: grid;
+      gap: 6px;
+      padding: 12px 14px;
+      border-color: rgba(255, 107, 44, 0.45);
+      background:
+        linear-gradient(135deg, rgba(255, 107, 44, 0.16), transparent 56%),
+        #111111;
+    }
+
+    .quote-kicker {
+      color: var(--court);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .quote-strip .quote p {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .quote-strip .quote span {
+      margin-top: 0;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #151515, #0d0d0d);
+      overflow: hidden;
+    }
+
+    summary {
+      min-height: 54px;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    summary span {
+      display: block;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      color: var(--court);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    .details-body {
+      display: grid;
+      gap: 10px;
+      padding: 0 12px 12px;
+    }
+
+    .day-picker {
+      display: grid;
+      gap: 6px;
+    }
+
+    .day-picker label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .day-picker select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 107, 44, 0.45);
+      background: #101010;
+      color: var(--ink);
+      padding: 0 14px;
+      font-weight: 900;
+      outline: none;
+    }
+
+    .day-picker select:focus {
+      border-color: var(--court);
+      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.16);
+    }
+
+    .today,
+    .week,
+    .timer,
+    .tips,
+    .calendar,
+    .quotes {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(32px, 6vw, 64px);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    h3 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .today {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .date-row,
+    .toolbar,
+    .drill-head,
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--court);
+      color: var(--black);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .flame-count {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .flame-mark {
+      position: relative;
+      width: 14px;
+      height: 20px;
+      display: inline-block;
+      border-radius: 70% 45% 72% 48%;
+      background:
+        radial-gradient(circle at 50% 76%, #ffd7a3 0 16%, transparent 17%),
+        radial-gradient(circle at 48% 66%, #ffb14d 0 30%, transparent 31%),
+        linear-gradient(145deg, #ff2e17 8%, var(--court) 42%, #ffb14d 100%);
+      clip-path: polygon(50% 0, 70% 22%, 61% 38%, 82% 55%, 94% 78%, 75% 100%, 28% 100%, 7% 78%, 18% 52%, 35% 34%);
+      filter: drop-shadow(0 0 5px var(--court)) drop-shadow(0 0 10px rgba(255, 107, 44, 0.65));
+      animation: flamePulse 1.2s ease-in-out infinite alternate;
+    }
+
+    .flame-mark::before {
+      content: "";
+      position: absolute;
+      inset: 34% 28% 13%;
+      border-radius: 70% 45% 72% 48%;
+      background: #ffdca8;
+      clip-path: polygon(50% 0, 70% 28%, 62% 45%, 78% 62%, 69% 100%, 30% 100%, 18% 66%, 34% 44%);
+    }
+
+    .flame-count.tier-1 .flame-mark {
+      background:
+        radial-gradient(circle at 50% 76%, #ffe0b8 0 16%, transparent 17%),
+        radial-gradient(circle at 48% 66%, #ffc26d 0 30%, transparent 31%),
+        linear-gradient(145deg, #ff4d1f 8%, #ff914d 42%, #ffd15c 100%);
+      filter: drop-shadow(0 0 6px #ff914d) drop-shadow(0 0 14px rgba(255, 145, 77, 0.8));
+    }
+
+    .flame-count.tier-2 .flame-mark {
+      background:
+        radial-gradient(circle at 50% 76%, #ffe1c2 0 16%, transparent 17%),
+        radial-gradient(circle at 48% 66%, #ff9f50 0 30%, transparent 31%),
+        linear-gradient(145deg, #dd1020 8%, #ff4d2e 45%, #ff9a2e 100%);
+      filter: drop-shadow(0 0 7px #ff4d2e) drop-shadow(0 0 17px rgba(255, 77, 46, 0.9));
+    }
+
+    .flame-count.tier-3 .flame-mark {
+      background:
+        radial-gradient(circle at 50% 76%, #ffd6ef 0 16%, transparent 17%),
+        radial-gradient(circle at 48% 66%, #ff7aaa 0 30%, transparent 31%),
+        linear-gradient(145deg, #b9093b 8%, #ff2c6d 45%, #ff774d 100%);
+      filter: drop-shadow(0 0 8px #ff2c6d) drop-shadow(0 0 20px rgba(255, 44, 109, 0.95));
+    }
+
+    .flame-count.tier-4 .flame-mark {
+      background:
+        radial-gradient(circle at 50% 76%, #ffffff 0 16%, transparent 17%),
+        radial-gradient(circle at 48% 66%, #ffe2a8 0 30%, transparent 31%),
+        linear-gradient(145deg, #ffffff 8%, #ffd166 42%, #ff5a1f 100%);
+      filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 24px rgba(255, 107, 44, 1));
+    }
+
+    @keyframes flamePulse {
+      from {
+        transform: scale(0.96) rotate(-2deg);
+      }
+      to {
+        transform: scale(1.12) rotate(2deg);
+      }
+    }
+
+    .progress-shell {
+      width: 100%;
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #202020;
+      border: 1px solid var(--line);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--court-dark), var(--court));
+      transition: width 180ms ease;
+    }
+
+    .week {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .focus-panel {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0d0d0d;
+    }
+
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .focus-chip {
+      background: #1c1c1c;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .focus-chip.is-active {
+      background: var(--court);
+      color: var(--black);
+      border-color: var(--court);
+    }
+
+    .toolbar select {
+      min-height: 42px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #1c1c1c;
+      color: var(--ink);
+      padding: 0 12px;
+    }
+
+    .drill-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .drill {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+
+    .drill.is-done {
+      border-color: var(--orange-line);
+      background: var(--orange-soft);
+    }
+
+    .drill-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .drill-guide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px;
+      gap: 12px;
+      align-items: stretch;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #101010;
+    }
+
+    .drill-guide ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .drill-guide li {
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .court-map {
+      min-height: 132px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #303030;
+      background: #090909;
+    }
+
+    .court-map svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tag {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #242424;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .drill-time {
+      color: var(--court);
+      font-weight: 900;
+    }
+
+    .drill-progress {
+      display: grid;
+      gap: 6px;
+    }
+
+    .drill-progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mini-progress {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #232323;
+      border: 1px solid var(--line);
+    }
+
+    .mini-progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--court-dark), var(--court));
+    }
+
+    .inline-timer {
+      display: grid;
+      gap: 6px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 107, 44, 0.6);
+      background:
+        linear-gradient(135deg, rgba(255, 107, 44, 0.18), transparent 62%),
+        #0b0b0b;
+    }
+
+    .inline-timer span {
+      color: var(--court);
+      font-size: 11px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .inline-timer strong {
+      color: var(--ink);
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .inline-timer p {
+      font-size: 13px;
+    }
+
+    .drill-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .timer,
+    .tips,
+    .calendar,
+    .quotes,
+    .activity {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 104px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b0b0b;
+      color: var(--ink);
+      padding: 12px;
+      font: inherit;
+      line-height: 1.4;
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--court);
+      outline-offset: 2px;
+    }
+
+    .activity-result {
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #171717;
+    }
+
+    .activity-result strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--court);
+    }
+
+    .activity-result.is-approved {
+      border-color: var(--court);
+      background: var(--orange-soft);
+    }
+
+    .activity-result.is-denied strong {
+      color: #ff8f6b;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .cal-day {
+      min-height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #171717;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      gap: 1px;
+      padding: 5px 2px;
+      font-size: 11px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cal-day[data-count="1"] {
+      background: #3a1c0e;
+      border-color: #8f3a16;
+      color: #f7f7f7;
+    }
+
+    .cal-day[data-count="2"],
+    .cal-day[data-count="3"],
+    .cal-day[data-count="4"] {
+      background: #642910;
+      border-color: var(--court);
+      color: #ffffff;
+    }
+
+    .cal-day.is-today {
+      outline: 2px solid var(--court);
+      outline-offset: 2px;
+    }
+
+    .cal-day.is-selected {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(255, 107, 44, 0.35);
+    }
+
+    .cal-count {
+      color: var(--court);
+      font-size: 10px;
+    }
+
+    .day-log {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #101010;
+    }
+
+    .day-log-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .day-log-item {
+      display: grid;
+      gap: 3px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #171717;
+      border: 1px solid var(--line);
+    }
+
+    .day-log-item strong {
+      font-size: 14px;
+    }
+
+    .day-log-item span {
+      color: var(--court);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .quote-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quote {
+      padding: 12px;
+      border-radius: 8px;
+      background: #171717;
+      border: 1px solid var(--line);
+    }
+
+    .quote p {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .quote span {
+      display: block;
+      margin-top: 8px;
+      color: var(--court);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .time {
+      font-size: 58px;
+      line-height: 1;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .two-up {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        background:
+          radial-gradient(circle at 50% -80px, rgba(255, 107, 44, 0.22), transparent 240px),
+          #050505;
+      }
+
+      main {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .today,
+      .week,
+      .timer,
+      .tips,
+      .calendar,
+      .quotes,
+      .activity {
+        box-shadow: none;
+      }
+
+      .today,
+      .week,
+      .timer,
+      .tips,
+      .calendar,
+      .quotes,
+      .activity {
+        padding: 14px;
+      }
+
+      .stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat {
+        padding: 9px 8px;
+      }
+
+      .stat strong {
+        font-size: 22px;
+      }
+
+      .toolbar {
+        display: grid;
+      }
+
+      .toolbar select {
+        width: 100%;
+      }
+
+      .focus-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .drill {
+        padding: 12px;
+      }
+
+      .drill-guide {
+        grid-template-columns: 1fr;
+      }
+
+      .court-map {
+        min-height: 150px;
+      }
+
+      .drill-actions button,
+      .timer-controls button {
+        flex: 1 1 130px;
+      }
+
+      .timer-controls {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      .time {
+        font-size: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="app-head">
+      <div class="brand-row">
+        <div class="brand-mark">
+          <img src="./app-icon.svg" alt="">
+          <div>
+            <h1>GRND</h1>
+            <p>Train, log, repeat.</p>
+          </div>
+        </div>
+        <div class="header-streak" aria-label="Current streak">
+          <span>Streak</span>
+          <strong id="header-streak-count">0 days</strong>
+        </div>
+      </div>
+      <div class="quote-list quote-strip" id="quote-list" aria-label="Daily NBA quote"></div>
+      <nav class="top-tabs" aria-label="GRND pages">
+        <button type="button" class="top-tab is-active" data-page="workout-page" aria-current="page">
+          <span class="top-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c-3 4-3 12 0 16M12 4c3 4 3 12 0 16"/></svg></span>
+          <span class="top-tab-label">Workout</span>
+        </button>
+        <button type="button" class="top-tab" data-page="progress-page">
+          <span class="top-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c3 3 5 6 5 10a5 5 0 0 1-10 0c0-2 1-4 3-6-.2 3 1 4 2 5 1-2 1-5 0-9z"/></svg></span>
+          <span class="top-tab-label">Progress</span>
+        </button>
+        <button type="button" class="top-tab" data-page="activity-page">
+          <span class="top-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/><path d="M4 20h16"/></svg></span>
+          <span class="top-tab-label">Activity</span>
+        </button>
+        <button type="button" class="top-tab" data-page="mindset-page">
+          <span class="top-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 9.2l5-.7L12 4z"/></svg></span>
+          <span class="top-tab-label">Mindset</span>
+        </button>
+      </nav>
+    </header>
+
+    <section class="home-stack page is-active" id="workout-page">
+      <article class="today" id="workout-section">
+        <div class="date-row">
+          <div>
+            <h2 id="today-title">Today</h2>
+            <p id="today-focus">Loading your workout.</p>
+          </div>
+          <span class="pill" id="day-pill">Week</span>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat">
+            <span>Done</span>
+            <strong id="done-count">0</strong>
+          </div>
+          <div class="stat">
+            <span>Minutes</span>
+            <strong id="minutes-count">0</strong>
+          </div>
+          <div class="stat">
+            <span>Streak</span>
+            <strong id="streak-count" class="flame-count tier-0"><span class="flame-mark"></span>0</strong>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <p id="progress-copy">Finish every drill for the day.</p>
+          <div class="drill-actions">
+            <button type="button" class="good" id="log-workout" disabled>Log workout</button>
+          </div>
+        </div>
+        <div class="progress-shell" aria-label="Daily completion">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </article>
+
+      <article class="week">
+        <div class="toolbar">
+          <div>
+            <h2>Workout</h2>
+            <p>Default is Suggested. Open options when you want to change it.</p>
+          </div>
+        </div>
+        <details class="day-panel">
+          <summary><span><span class="summary-label">Day</span><span class="summary-value">Today</span></span></summary>
+          <div class="details-body">
+            <div class="day-picker">
+              <label for="day-select">Choose day</label>
+              <select id="day-select" aria-label="Choose a day"></select>
+            </div>
+          </div>
+        </details>
+        <details class="focus-panel">
+          <summary><span><span class="summary-label">Workout focus</span><span class="summary-value">Suggested</span></span></summary>
+          <div class="details-body">
+            <p>Choose what to work on, or let GRND suggest a daily mix.</p>
+            <div class="focus-grid" id="focus-grid" aria-label="Choose workout focus"></div>
+          </div>
+        </details>
+        <div class="drill-list" id="drill-list"></div>
+      </article>
+
+    </section>
+
+    <section class="page" id="progress-page">
+      <div class="two-up">
+        <article class="calendar">
+          <div class="date-row">
+            <div>
+              <h2>Progress Calendar</h2>
+              <p id="calendar-copy">Log workouts to build the streak.</p>
+            </div>
+            <span class="pill" id="calendar-total">0 logged</span>
+          </div>
+          <div class="calendar-grid" id="calendar-grid" aria-label="Workout progress calendar"></div>
+          <div class="day-log" id="day-log">
+            <h3 id="day-log-title">Today</h3>
+            <div class="day-log-list" id="day-log-list"></div>
+          </div>
+        </article>
+        <article class="tips">
+          <h2>Progress Rules</h2>
+          <ul>
+            <li>Finish drills and tap Log workout to add a calendar mark.</li>
+            <li>You can log multiple workouts on the same day.</li>
+            <li>One logged workout protects the streak for that date.</li>
+            <li>The flame changes color every 10 streak days.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="activity-page">
+      <article class="activity">
+        <h2>Activity Check</h2>
+        <p>Played instead of training? Tell the judge what you did. Real hoop work can protect your streak.</p>
+        <textarea id="activity-input" placeholder="Example: Played 3 pickup games with friends for about 45 minutes and guarded full court."></textarea>
+        <div class="drill-actions">
+          <button type="button" id="judge-activity">Judge activity</button>
+          <button type="button" class="secondary" id="clear-activity">Clear</button>
+        </div>
+        <div class="activity-result" id="activity-result">
+          <strong>Waiting</strong>
+          <p>Five minutes of casual shooting will not count. A real pickup game, team practice, scrimmage, or serious solo workout can.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="mindset-page">
+      <article class="tips">
+        <h2>Practice Rules</h2>
+        <ul>
+          <li>Warm up first: light jog, skips, hip openers, ankle bounces.</li>
+          <li>Make every rep game-speed once your form feels clean.</li>
+          <li>Track makes, not just attempts, for shooting drills.</li>
+          <li>End with free throws while tired.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const week = [
+      {
+        day: "Monday",
+        focus: "Handle and touch",
+        drills: [
+          ["Pound dribbles", "3 x 45 seconds each hand", 5, "Handle"],
+          ["Cross, between, behind combo", "8 clean reps each direction", 8, "Handle"],
+          ["Form shooting close to rim", "50 makes, perfect arc", 12, "Shot"],
+          ["Mikan finishes", "30 makes, no rushing", 8, "Finish"],
+          ["Free throws", "25 attempts, write down makes", 7, "Pressure"]
+        ]
+      },
+      {
+        day: "Tuesday",
+        focus: "Finishing and footwork",
+        drills: [
+          ["Jump stops to pivot", "4 sets of 8 reps", 8, "Footwork"],
+          ["Right-hand layups", "30 makes", 8, "Finish"],
+          ["Left-hand layups", "30 makes", 8, "Finish"],
+          ["Euro step walkthroughs", "20 each side", 10, "Finish"],
+          ["Corner catch-and-shoot", "40 attempts", 12, "Shot"]
+        ]
+      },
+      {
+        day: "Wednesday",
+        focus: "Shooting day",
+        drills: [
+          ["One-hand form shots", "30 makes", 8, "Shot"],
+          ["Five-spot midrange", "10 makes per spot", 18, "Shot"],
+          ["Free throw ladder", "Make 2, sprint, repeat 10 rounds", 12, "Pressure"],
+          ["Relocation threes", "5 makes from each wing and corner", 15, "Shot"],
+          ["Cool-down handles", "Low dribble control, 4 minutes", 4, "Handle"]
+        ]
+      },
+      {
+        day: "Thursday",
+        focus: "Defense and conditioning",
+        drills: [
+          ["Defensive slides", "6 x 20 seconds", 8, "Defense"],
+          ["Closeout to slide", "5 reps each side", 8, "Defense"],
+          ["Sprint to backpedal", "8 court lengths", 10, "Conditioning"],
+          ["Wall sits", "3 x 40 seconds", 6, "Strength"],
+          ["Tired free throws", "20 attempts", 6, "Pressure"]
+        ]
+      },
+      {
+        day: "Friday",
+        focus: "Game moves",
+        drills: [
+          ["Triple-threat jab series", "5 reps each side", 8, "Footwork"],
+          ["Hesi pull-up", "20 makes total", 12, "Shot"],
+          ["Crossover drive finish", "15 makes each side", 12, "Finish"],
+          ["Spin move finish", "12 makes each side", 10, "Finish"],
+          ["Free throws", "30 attempts", 8, "Pressure"]
+        ]
+      },
+      {
+        day: "Saturday",
+        focus: "Long workout",
+        drills: [
+          ["Ball-handling circuit", "10 minutes nonstop", 10, "Handle"],
+          ["Finishing package", "50 mixed makes", 18, "Finish"],
+          ["Spot shooting", "100 attempts", 25, "Shot"],
+          ["Conditioning suicides", "4 rounds with rest", 12, "Conditioning"],
+          ["Pressure free throws", "Make 10 before leaving", 10, "Pressure"]
+        ]
+      },
+      {
+        day: "Sunday",
+        focus: "Recovery and touch",
+        drills: [
+          ["Light mobility", "8 minutes easy", 8, "Recovery"],
+          ["Slow handles", "No mistakes for 5 minutes", 5, "Handle"],
+          ["Form shooting", "40 relaxed makes", 10, "Shot"],
+          ["Floaters", "20 soft makes", 8, "Finish"],
+          ["Free throws", "20 calm attempts", 6, "Pressure"]
+        ]
+      }
+    ];
+
+    const focusOptions = [
+      { id: "suggested", label: "Suggested" },
+      { id: "shot", label: "Shooting" },
+      { id: "handle", label: "Handles" },
+      { id: "finish", label: "Finishing" },
+      { id: "defense", label: "Defense" },
+      { id: "conditioning", label: "Conditioning" },
+      { id: "footwork", label: "Footwork" },
+      { id: "pressure", label: "Free Throws" }
+    ];
+
+    const focusPlans = {
+      shot: {
+        focus: "Shooting",
+        drills: [
+          ["One-hand form shots", "35 makes with perfect balance", 8, "Shot"],
+          ["Five-spot midrange", "8 makes per spot", 16, "Shot"],
+          ["Corner catch-and-shoot", "30 attempts each corner", 14, "Shot"],
+          ["Relocation threes", "5 makes from each wing and corner", 15, "Shot"],
+          ["Free throws", "25 attempts, track makes", 7, "Pressure"]
+        ]
+      },
+      handle: {
+        focus: "Ball handling",
+        drills: [
+          ["Pound dribbles", "3 x 45 seconds each hand", 5, "Handle"],
+          ["Cross, between, behind combo", "10 clean reps each direction", 9, "Handle"],
+          ["Low control dribbles", "No mistakes for 4 minutes", 4, "Handle"],
+          ["Crossover drive finish", "12 makes each side", 10, "Finish"],
+          ["Free throws", "20 calm attempts", 6, "Pressure"]
+        ]
+      },
+      finish: {
+        focus: "Finishing",
+        drills: [
+          ["Mikan finishes", "40 makes, no rushing", 10, "Finish"],
+          ["Right-hand layups", "30 makes", 8, "Finish"],
+          ["Left-hand layups", "30 makes", 8, "Finish"],
+          ["Euro step walkthroughs", "20 each side", 10, "Finish"],
+          ["Floaters", "25 soft makes", 10, "Finish"]
+        ]
+      },
+      defense: {
+        focus: "Defense",
+        drills: [
+          ["Defensive slides", "8 x 20 seconds", 10, "Defense"],
+          ["Closeout to slide", "6 reps each side", 9, "Defense"],
+          ["Sprint to backpedal", "8 court lengths", 10, "Conditioning"],
+          ["Wall sits", "3 x 45 seconds", 7, "Strength"],
+          ["Tired free throws", "20 attempts", 6, "Pressure"]
+        ]
+      },
+      conditioning: {
+        focus: "Conditioning",
+        drills: [
+          ["Dynamic warmup", "High knees, skips, hip openers", 7, "Recovery"],
+          ["Conditioning suicides", "4 rounds with rest", 12, "Conditioning"],
+          ["Sprint to backpedal", "10 court lengths", 12, "Conditioning"],
+          ["Finishing while tired", "20 mixed makes", 12, "Finish"],
+          ["Pressure free throws", "Make 10 before leaving", 10, "Pressure"]
+        ]
+      },
+      footwork: {
+        focus: "Footwork",
+        drills: [
+          ["Jump stops to pivot", "5 sets of 8 reps", 10, "Footwork"],
+          ["Triple-threat jab series", "6 reps each side", 9, "Footwork"],
+          ["Hesi pull-up", "18 makes total", 12, "Shot"],
+          ["Spin move finish", "12 makes each side", 10, "Finish"],
+          ["Free throws", "20 attempts", 6, "Pressure"]
+        ]
+      },
+      pressure: {
+        focus: "Free throws and pressure",
+        drills: [
+          ["Form shooting close to rim", "30 makes, easy rhythm", 8, "Shot"],
+          ["Free throw ladder", "Make 2, sprint, repeat 10 rounds", 12, "Pressure"],
+          ["Tired free throws", "25 attempts after movement", 8, "Pressure"],
+          ["Pressure free throws", "Make 10 before leaving", 10, "Pressure"],
+          ["Cooldown free throws", "20 calm attempts", 6, "Pressure"]
+        ]
+      }
+    };
+
+    const dailyFinishers = [
+      ["Clutch free throws", "Make 8 out of 10 before you leave", 7, "Pressure"],
+      ["Two-minute shooting burst", "Shoot game-speed for 2 minutes, track makes", 5, "Shot"],
+      ["Weak-hand finish set", "15 makes with your weak hand only", 7, "Finish"],
+      ["Pressure handles", "Two minutes low and fast with no lost dribbles", 5, "Handle"],
+      ["Full-court sprint finish", "Sprint into 10 layups, alternating sides", 8, "Conditioning"],
+      ["Defensive closeout finisher", "10 closeouts into slides, both directions", 6, "Defense"],
+      ["Perfect rep closer", "Choose your hardest drill and finish with 5 perfect reps", 6, "Footwork"]
+    ];
+
+    const dailyThemes = [
+      "Game speed",
+      "Weak hand",
+      "Footwork clean-up",
+      "Pressure reps",
+      "Conditioning edge",
+      "Shot rhythm",
+      "Defense first"
+    ];
+
+    const quotes = [
+      {
+        text: "I can accept failure, but I can't accept not trying.",
+        by: "Michael Jordan"
+      },
+      {
+        text: "Everything negative is all an opportunity for me to rise.",
+        by: "Kobe Bryant"
+      },
+      {
+        text: "You can't be afraid to fail. It's the only way you succeed.",
+        by: "LeBron James"
+      }
+    ];
+
+    const daySelect = document.querySelector("#day-select");
+    const focusGrid = document.querySelector("#focus-grid");
+    const drillList = document.querySelector("#drill-list");
+    const todayTitle = document.querySelector("#today-title");
+    const todayFocus = document.querySelector("#today-focus");
+    const dayPill = document.querySelector("#day-pill");
+    const doneCount = document.querySelector("#done-count");
+    const minutesCount = document.querySelector("#minutes-count");
+    const streakCount = document.querySelector("#streak-count");
+    const headerStreakCount = document.querySelector("#header-streak-count");
+    const progressCopy = document.querySelector("#progress-copy");
+    const progressBar = document.querySelector("#progress-bar");
+    const logWorkout = document.querySelector("#log-workout");
+    const calendarGrid = document.querySelector("#calendar-grid");
+    const calendarCopy = document.querySelector("#calendar-copy");
+    const calendarTotal = document.querySelector("#calendar-total");
+    const dayLogTitle = document.querySelector("#day-log-title");
+    const dayLogList = document.querySelector("#day-log-list");
+    const activityInput = document.querySelector("#activity-input");
+    const activityResult = document.querySelector("#activity-result");
+    const judgeActivity = document.querySelector("#judge-activity");
+    const clearActivity = document.querySelector("#clear-activity");
+    const quoteList = document.querySelector("#quote-list");
+    const timerDisplay = document.querySelector("#timer-display");
+    const timerLabel = document.querySelector("#timer-label");
+    const timerStart = document.querySelector("#timer-start");
+    const timerReset = document.querySelector("#timer-reset");
+    const daySummaryValue = document.querySelector(".day-panel .summary-value");
+    const focusSummaryValue = document.querySelector(".focus-panel .summary-value");
+    const topTabs = document.querySelectorAll("[data-page]");
+    const pages = document.querySelectorAll(".page");
+
+    let selectedDay = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+    let selectedFocus = "suggested";
+    let timerSeconds = 0;
+    let timerId = null;
+    let activeDrillIndex = null;
+    let activeStartedAt = 0;
+    let selectedLogDate = dateKey();
+    const progress = JSON.parse(localStorage.getItem("daily-hoops-progress") || "{}");
+    const workoutLog = JSON.parse(localStorage.getItem("daily-hoops-log") || "{}");
+    const drillTimes = JSON.parse(localStorage.getItem("daily-hoops-drill-times") || "{}");
+    const workoutEntries = JSON.parse(localStorage.getItem("grnd-workout-entries") || "{}");
+
+    week.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = item.day;
+      daySelect.appendChild(option);
+    });
+
+    focusOptions.forEach((focus) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "focus-chip";
+      chip.dataset.focus = focus.id;
+      chip.textContent = focus.label;
+      focusGrid.appendChild(chip);
+    });
+
+    function showPage(pageId, shouldUpdateUrl = false) {
+      const nextPage = document.getElementById(pageId) ? pageId : "workout-page";
+      topTabs.forEach((tab) => {
+        const isActive = tab.dataset.page === nextPage;
+        tab.classList.toggle("is-active", isActive);
+        if (isActive) {
+          tab.setAttribute("aria-current", "page");
+        } else {
+          tab.removeAttribute("aria-current");
+        }
+      });
+      pages.forEach((page) => {
+        page.classList.toggle("is-active", page.id === nextPage);
+      });
+      if (shouldUpdateUrl && window.location.hash !== `#${nextPage}`) {
+        history.pushState({ page: nextPage }, "", `#${nextPage}`);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function saveProgress() {
+      localStorage.setItem("daily-hoops-progress", JSON.stringify(progress));
+    }
+
+    function saveWorkoutLog() {
+      localStorage.setItem("daily-hoops-log", JSON.stringify(workoutLog));
+    }
+
+    function saveDrillTimes() {
+      localStorage.setItem("daily-hoops-drill-times", JSON.stringify(drillTimes));
+    }
+
+    function saveWorkoutEntries() {
+      localStorage.setItem("grnd-workout-entries", JSON.stringify(workoutEntries));
+    }
+
+    function dateKey(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function dateWithOffset(offset) {
+      const date = new Date();
+      date.setHours(12, 0, 0, 0);
+      date.setDate(date.getDate() + offset);
+      return date;
+    }
+
+    function dailySeed(extra = "") {
+      const raw = `${dateKey()}-${extra}`;
+      return raw.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    }
+
+    function rotateList(items, amount) {
+      if (!items.length) return [];
+      const shift = amount % items.length;
+      return [...items.slice(shift), ...items.slice(0, shift)];
+    }
+
+    function keyFor(dayIndex, drillIndex) {
+      return `${dateKey()}-${week[dayIndex].day}-${selectedFocus}-${drillIndex}`;
+    }
+
+    function timeKeyFor(dayIndex, drillIndex) {
+      return `${dateKey()}-${week[dayIndex].day}-${selectedFocus}-${drillIndex}`;
+    }
+
+    function applyDailyVariation(plan, focusId) {
+      const seed = dailySeed(`${plan.day}-${focusId}`);
+      const theme = dailyThemes[seed % dailyThemes.length];
+      const rotated = rotateList(plan.drills.map((drill) => [...drill]), seed);
+      const finisher = [...dailyFinishers[(seed + selectedDay) % dailyFinishers.length]];
+      const drills = rotated.slice(0, Math.max(0, rotated.length - 1));
+      drills.push(finisher);
+      const minutes = drills.reduce((sum, drill) => sum + drill[2], 0);
+      if (minutes < 60) {
+        drills.push([
+          "Extra work block",
+          `Add ${60 - minutes} minutes of focused reps from today's hardest drill`,
+          60 - minutes,
+          "Conditioning"
+        ]);
+      }
+      return {
+        ...plan,
+        focus: `${plan.focus} + ${theme}`,
+        drills
+      };
+    }
+
+    function getPlan() {
+      if (selectedFocus === "suggested") return applyDailyVariation(week[selectedDay], "suggested");
+      const plan = {
+        day: week[selectedDay].day,
+        focus: focusPlans[selectedFocus].focus,
+        drills: focusPlans[selectedFocus].drills
+      };
+      return applyDailyVariation(plan, selectedFocus);
+    }
+
+    function getDone(dayIndex, plan = getPlan()) {
+      return plan.drills.filter((_, index) => progress[keyFor(dayIndex, index)]).length;
+    }
+
+    function getStreak() {
+      let streak = 0;
+      for (let offset = 0; offset > -365; offset -= 1) {
+        if ((workoutLog[dateKey(dateWithOffset(offset))] || 0) > 0) streak += 1;
+        else break;
+      }
+      return streak;
+    }
+
+    function getFlameTier(streak) {
+      return Math.min(4, Math.floor(streak / 10));
+    }
+
+    function addHistoryEntry(date, entry) {
+      if (!workoutEntries[date]) workoutEntries[date] = [];
+      workoutEntries[date].push({
+        ...entry,
+        savedAt: new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      });
+      saveWorkoutEntries();
+    }
+
+    function logToday(entry) {
+      const today = dateKey();
+      workoutLog[today] = (workoutLog[today] || 0) + 1;
+      saveWorkoutLog();
+      if (entry) addHistoryEntry(today, entry);
+    }
+
+    function resetCurrentDrills() {
+      getPlan().drills.forEach((_, index) => {
+        delete progress[keyFor(selectedDay, index)];
+        delete drillTimes[timeKeyFor(selectedDay, index)];
+      });
+      saveProgress();
+      saveDrillTimes();
+    }
+
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function courtMap(points = [], arrows = []) {
+      const spots = points.map((point) => `
+        <g>
+          <circle cx="${point[0]}" cy="${point[1]}" r="7" fill="#ff6b2c"/>
+          <text x="${point[0]}" y="${point[1] + 4}" text-anchor="middle" font-size="9" font-weight="900" fill="#050505">${point[2] || ""}</text>
+        </g>
+      `).join("");
+      const paths = arrows.map((arrow) => `
+        <path d="M${arrow[0]} ${arrow[1]} L${arrow[2]} ${arrow[3]}" stroke="#ff6b2c" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+      `).join("");
+
+      return `
+        <div class="court-map" aria-hidden="true">
+          <svg viewBox="0 0 220 160">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0 0 L6 3 L0 6 Z" fill="#ff6b2c"/>
+              </marker>
+            </defs>
+            <rect width="220" height="160" fill="#090909"/>
+            <rect x="12" y="12" width="196" height="136" rx="7" fill="none" stroke="#2f2f2f" stroke-width="3"/>
+            <path d="M68 12v58h84V12" fill="none" stroke="#f7f7f7" stroke-width="3"/>
+            <path d="M82 12v38h56V12" fill="none" stroke="#ff6b2c" stroke-width="3"/>
+            <path d="M82 50a28 28 0 0 0 56 0" fill="none" stroke="#ff6b2c" stroke-width="3"/>
+            <circle cx="110" cy="24" r="5" fill="none" stroke="#f7f7f7" stroke-width="3"/>
+            <path d="M35 12c8 68 142 68 150 0" fill="none" stroke="#5a5a5a" stroke-width="3"/>
+            ${paths}
+            ${spots}
+          </svg>
+        </div>
+      `;
+    }
+
+    function getDrillGuide(drill) {
+      const name = drill[0].toLowerCase();
+      const tag = drill[3].toLowerCase();
+
+      if (name.includes("five-spot") || name.includes("spot shooting")) {
+        return {
+          steps: [
+            "Shoot from both corners, both wings, and the top.",
+            "Do not leave a spot until you hit the target makes.",
+            "Step in the same way every time: feet set, eyes up, hold the follow-through."
+          ],
+          map: courtMap([[36, 30, "1"], [72, 96, "2"], [110, 116, "3"], [148, 96, "4"], [184, 30, "5"]])
+        };
+      }
+
+      if (name.includes("corner")) {
+        return {
+          steps: [
+            "Start in one corner, catch or self-toss, then shoot in rhythm.",
+            "Reset both feet behind the corner three line after each shot.",
+            "Finish one side before switching corners."
+          ],
+          map: courtMap([[35, 30, "L"], [185, 30, "R"]])
+        };
+      }
+
+      if (name.includes("relocation")) {
+        return {
+          steps: [
+            "Start on the wing, pass or self-toss, then slide to the corner.",
+            "Catch with your feet ready and shoot without drifting.",
+            "Work both sides so the footwork feels even."
+          ],
+          map: courtMap([[70, 94, "1"], [35, 30, "2"], [150, 94, "3"], [185, 30, "4"]], [[70, 94, 35, 30], [150, 94, 185, 30]])
+        };
+      }
+
+      if (name.includes("form") || name.includes("one-hand")) {
+        return {
+          steps: [
+            "Stand close to the rim, inside the paint.",
+            "Shoot with clean wrist snap and soft arc.",
+            "Count makes only when your guide hand stays quiet and your balance is still."
+          ],
+          map: courtMap([[100, 44, "A"], [120, 44, "B"], [110, 62, "C"]])
+        };
+      }
+
+      if (tag === "finish" || name.includes("layup") || name.includes("mikan") || name.includes("floater")) {
+        return {
+          steps: [
+            "Attack from both sides, not just your strong hand.",
+            "Finish off the correct foot and keep your eyes on the square.",
+            "Make the last step controlled, then finish high."
+          ],
+          map: courtMap([[68, 98, "L"], [152, 98, "R"]], [[68, 98, 102, 31], [152, 98, 118, 31]])
+        };
+      }
+
+      if (tag === "handle") {
+        return {
+          steps: [
+            "Stay low with your chest up and knees bent.",
+            "Keep the ball below your knee on control reps.",
+            "Go faster only when you can complete reps without losing the ball."
+          ],
+          map: courtMap([[82, 92, "L"], [110, 112, "M"], [138, 92, "R"]], [[82, 92, 110, 112], [110, 112, 138, 92]])
+        };
+      }
+
+      if (tag === "defense") {
+        return {
+          steps: [
+            "Stay low, chest up, hands active.",
+            "Slide without crossing your feet.",
+            "Sprint the closeout, chop your feet, then slide on the angle."
+          ],
+          map: courtMap([[55, 108, "1"], [110, 82, "2"], [165, 108, "3"]], [[55, 108, 110, 82], [110, 82, 165, 108]])
+        };
+      }
+
+      if (tag === "conditioning") {
+        return {
+          steps: [
+            "Sprint the hard parts and walk only during planned rest.",
+            "Touch each line with your hand so every rep is honest.",
+            "Keep your last rep as sharp as your first."
+          ],
+          map: courtMap([[35, 130, "1"], [75, 130, "2"], [110, 130, "3"], [185, 130, "4"]], [[35, 130, 75, 130], [75, 130, 110, 130], [110, 130, 185, 130]])
+        };
+      }
+
+      if (tag === "pressure") {
+        return {
+          steps: [
+            "Use the same routine every attempt.",
+            "Say the score before you shoot to add pressure.",
+            "If you miss short, use more legs; if you miss long, soften the wrist."
+          ],
+          map: courtMap([[110, 70, "FT"]])
+        };
+      }
+
+      return {
+        steps: [
+          "Start slow enough to keep the form clean.",
+          "Build speed only after the movement feels balanced.",
+          "Finish the drill with one perfect rep."
+        ],
+        map: courtMap([[110, 95, "Go"]])
+      };
+    }
+
+    function render() {
+      const plan = getPlan();
+      const done = getDone(selectedDay, plan);
+      const totalMinutes = plan.drills.reduce((sum, drill) => sum + drill[2], 0);
+      const percent = Math.round((done / plan.drills.length) * 100);
+      const streak = getStreak();
+      const todayWorkouts = workoutLog[dateKey()] || 0;
+
+      daySelect.value = selectedDay;
+      if (daySummaryValue) daySummaryValue.textContent = week[selectedDay].day;      focusGrid.querySelectorAll(".focus-chip").forEach((chip) => {
+        chip.classList.toggle("is-active", chip.dataset.focus === selectedFocus);
+      });
+      if (focusSummaryValue) {
+        const focusLabel = focusOptions.find((focus) => focus.id === selectedFocus).label;
+        focusSummaryValue.textContent = focusLabel;
+      }
+      todayTitle.textContent = selectedFocus === "suggested" ? `${plan.day}'s Workout` : `${plan.focus} Day`;
+      todayFocus.textContent = selectedFocus === "suggested" ? plan.focus : `${plan.day} custom focus`;
+      dayPill.textContent = `${plan.drills.length} drills`;
+      doneCount.textContent = done;
+      minutesCount.textContent = totalMinutes;
+      streakCount.className = `flame-count tier-${getFlameTier(streak)}`;
+      streakCount.innerHTML = `<span class="flame-mark"></span>${streak}`;
+      headerStreakCount.textContent = `${streak} day${streak === 1 ? "" : "s"}`;
+      progressCopy.textContent = done === plan.drills.length ? "Workout complete." : `${percent}% complete.`;
+      progressBar.style.width = `${percent}%`;
+      logWorkout.disabled = done !== plan.drills.length;
+      logWorkout.textContent = done === plan.drills.length ? "Log workout" : "Finish drills first";
+      calendarCopy.textContent = todayWorkouts === 1 ? "1 workout logged today." : `${todayWorkouts} workouts logged today.`;
+      calendarTotal.textContent = `${Object.values(workoutLog).reduce((sum, count) => sum + count, 0)} logged`;
+
+      drillList.innerHTML = "";
+      plan.drills.forEach((drill, index) => {
+        const isDone = Boolean(progress[keyFor(selectedDay, index)]);
+        const savedTime = drillTimes[timeKeyFor(selectedDay, index)];
+        const isActive = activeDrillIndex === index;
+        const plannedSeconds = drill[2] * 60;
+        const activeSeconds = isActive ? timerSeconds : 0;
+        const trackedSeconds = savedTime || activeSeconds;
+        const timePercent = Math.min(100, Math.round((trackedSeconds / plannedSeconds) * 100));
+        const guide = getDrillGuide(drill);
+        const card = document.createElement("article");
+        card.className = `drill${isDone ? " is-done" : ""}`;
+        card.innerHTML = `
+          <div class="drill-head">
+            <h3>${drill[0]}</h3>
+            <span class="pill">${drill[2]} min</span>
+          </div>
+          <p>${drill[1]}</p>
+          <div class="drill-progress">
+            <div class="drill-progress-row">
+              <span>${formatTime(trackedSeconds)} done</span>
+              <span>${formatTime(plannedSeconds)} goal</span>
+            </div>
+            <div class="mini-progress" aria-label="Drill time progress">
+              <span style="width: ${timePercent}%"></span>
+            </div>
+          </div>
+          ${isActive ? `
+            <div class="inline-timer" aria-live="polite">
+              <span>Timing now</span>
+              <strong>${formatTime(timerSeconds)}</strong>
+              <p>${timerSeconds > plannedSeconds ? "You are past the suggested time. Keep going if the work is still good." : `${formatTime(Math.max(0, plannedSeconds - timerSeconds))} left before the suggested time.`}</p>
+            </div>
+          ` : ""}
+          <div class="drill-meta">
+            <span class="tag">${drill[3]}</span>
+            <span class="tag">${isDone ? "Done" : "Ready"}</span>
+            ${savedTime ? `<span class="tag drill-time">Time ${formatTime(savedTime)}</span>` : ""}
+          </div>
+          <div class="drill-guide">
+            <ol>
+              ${guide.steps.map((step) => `<li>${step}</li>`).join("")}
+            </ol>
+            ${guide.map}
+          </div>
+          <div class="drill-actions">
+            <button type="button" class="${isDone ? "secondary" : "good"}" data-toggle="${index}">
+              ${isDone ? "Mark unfinished" : "Mark done"}
+            </button>
+            <button type="button" class="${isActive ? "good" : "secondary"}" data-timer="${index}">
+              ${isActive ? "Stop timing" : "Time myself"}
+            </button>
+          </div>
+        `;
+        drillList.appendChild(card);
+      });
+      renderCalendar();
+      renderQuotes();
+    }
+
+    function renderCalendar() {
+      calendarGrid.innerHTML = "";
+      for (let offset = -27; offset <= 0; offset += 1) {
+        const date = dateWithOffset(offset);
+        const key = dateKey(date);
+        const count = workoutLog[key] || 0;
+        const detailsCount = (workoutEntries[key] || []).length;
+        const day = document.createElement("div");
+        day.className = `cal-day${offset === 0 ? " is-today" : ""}${selectedLogDate === key ? " is-selected" : ""}`;
+        day.dataset.count = String(Math.min(count, 4));
+        day.dataset.date = key;
+        day.title = `${key}: ${count} workouts, ${detailsCount} notes`;
+        day.innerHTML = `
+          <span>${date.getDate()}</span>
+          <span class="cal-count">${count ? `x${count}` : detailsCount ? "note" : ""}</span>
+        `;
+        calendarGrid.appendChild(day);
+      }
+      renderDayLog(selectedLogDate);
+    }
+
+    function renderDayLog(key) {
+      const entries = workoutEntries[key] || [];
+      const fallbackCount = workoutLog[key] || 0;
+      dayLogTitle.textContent = key === dateKey() ? "Today" : key;
+      dayLogList.innerHTML = "";
+
+      if (!entries.length && !fallbackCount) {
+        dayLogList.innerHTML = `<p>No basketball logged for this day.</p>`;
+        return;
+      }
+
+      if (!entries.length) {
+        dayLogList.innerHTML = `<article class="day-log-item"><strong>Workout logged</strong><span>${fallbackCount} session${fallbackCount === 1 ? "" : "s"}</span><p>Older log entry without details.</p></article>`;
+        return;
+      }
+
+      entries.forEach((entry) => {
+        const item = document.createElement("article");
+        item.className = "day-log-item";
+        const time = entry.seconds ? formatTime(entry.seconds) : "No time saved";
+        const planned = entry.plannedSeconds ? ` / goal ${formatTime(entry.plannedSeconds)}` : "";
+        item.innerHTML = `
+          <strong>${entry.title}</strong>
+          <span>${entry.type} · ${time}${planned}</span>
+          <p>${entry.detail || "Logged basketball work."}</p>
+        `;
+        dayLogList.appendChild(item);
+      });
+    }
+
+    function renderQuotes() {
+      quoteList.innerHTML = "";
+      const quote = quotes[dailySeed("quote") % quotes.length];
+      const card = document.createElement("article");
+      card.className = "quote";
+      card.innerHTML = `<strong class="quote-kicker">Daily NBA Quote</strong><p>${quote.text}</p><span>${quote.by}</span>`;
+      quoteList.appendChild(card);
+    }
+
+    function evaluateActivity(text) {
+      const clean = text.toLowerCase();
+      const minuteMatch = clean.match(/(\d+)\s*(min|mins|minute|minutes|hr|hrs|hour|hours)/);
+      let minutes = 0;
+      if (minuteMatch) {
+        minutes = Number(minuteMatch[1]);
+        if (minuteMatch[2].startsWith("h")) minutes *= 60;
+      }
+
+      const competitionWords = ["pickup", "pick up", "game", "scrimmage", "league", "tournament", "5v5", "4v4", "3v3", "2v2", "one on one", "1v1", "played with friends", "played basketball"];
+      const practiceWords = ["practice", "training", "workout", "drills", "shooting", "conditioning", "defense", "handles", "layups", "sprints", "shots", "free throws", "finished", "dribbled"];
+      const intensityWords = ["full court", "hard", "intense", "sweat", "competitive", "guarded", "defense", "running", "sprints", "tired", "serious"];
+      const weakWords = ["casual", "around", "chill", "light", "just shot", "messing"];
+
+      let score = 0;
+      const reasons = [];
+
+      if (competitionWords.some((word) => clean.includes(word))) {
+        score += 45;
+        reasons.push("real competition or game play");
+      }
+
+      if (practiceWords.some((word) => clean.includes(word))) {
+        score += 30;
+        reasons.push("basketball-specific work");
+      }
+
+      if (intensityWords.some((word) => clean.includes(word))) {
+        score += 20;
+        reasons.push("good intensity");
+      }
+
+      if (minutes >= 45) {
+        score += 25;
+        reasons.push("long enough to matter");
+      } else if (minutes >= 30) {
+        score += 22;
+        reasons.push("solid time spent");
+      } else if (minutes >= 15) {
+        score += 15;
+        reasons.push("some real time spent");
+      } else if (minutes > 0) {
+        score -= 18;
+        reasons.push("too short");
+      }
+
+      if (weakWords.some((word) => clean.includes(word))) {
+        score -= 10;
+        reasons.push("sounds casual");
+      }
+
+      if (clean.length < 18) {
+        score -= 12;
+        reasons.push("needs more detail");
+      }
+
+      const approved = score >= 40 && !(minutes > 0 && minutes < 8);
+      return {
+        approved,
+        score,
+        reasons: reasons.length ? reasons : ["not enough basketball detail"],
+        minutes
+      };
+    }
+
+    function showActivityResult(result, text) {
+      activityResult.className = `activity-result ${result.approved ? "is-approved" : "is-denied"}`;
+      if (result.approved) {
+        activityResult.innerHTML = `
+          <strong>Counts for your streak</strong>
+          <p>${result.reasons.join(", ")}. Logged today as basketball activity.</p>
+        `;
+        logToday({
+          type: "Activity",
+          title: "Basketball activity",
+          detail: text,
+          seconds: result.minutes ? result.minutes * 60 : 0
+        });
+        activityInput.value = "";
+        render();
+        return;
+      }
+
+      activityResult.innerHTML = `
+        <strong>Does not count yet</strong>
+        <p>${result.reasons.join(", ")}. Add more serious work, more time, or real competition to protect the streak.</p>
+      `;
+    }
+
+    function updateTimer() {
+      if (timerDisplay) timerDisplay.textContent = formatTime(timerSeconds);
+    }
+
+    function startDrillTimer(index) {
+      if (activeDrillIndex !== null) stopDrillTimer(true);
+      const drill = getPlan().drills[index];
+      activeDrillIndex = index;
+      activeStartedAt = Date.now();
+      timerSeconds = 0;
+      if (timerStart) {
+        timerStart.disabled = false;
+        timerStart.textContent = "Stop drill";
+      }
+      if (timerLabel) timerLabel.textContent = `Timing: ${drill[0]}`;
+      updateTimer();
+      timerId = window.setInterval(() => {
+        timerSeconds = Math.floor((Date.now() - activeStartedAt) / 1000);
+        updateTimer();
+        render();
+      }, 1000);
+      render();
+    }
+
+    function stopDrillTimer(markDone) {
+      if (!timerId) return;
+      window.clearInterval(timerId);
+      timerId = null;
+      timerSeconds = Math.max(1, Math.floor((Date.now() - activeStartedAt) / 1000));
+
+      if (markDone && activeDrillIndex !== null) {
+        const activeDrill = getPlan().drills[activeDrillIndex];
+        const plannedSeconds = activeDrill[2] * 60;
+        progress[keyFor(selectedDay, activeDrillIndex)] = true;
+        drillTimes[timeKeyFor(selectedDay, activeDrillIndex)] = timerSeconds;
+        saveProgress();
+        saveDrillTimes();
+        addHistoryEntry(dateKey(), {
+          type: "Timed drill",
+          title: activeDrill[0],
+          detail: timerSeconds > plannedSeconds ? "Went over suggested time" : "Completed with timer",
+          seconds: timerSeconds,
+          plannedSeconds
+        });
+      }
+
+      const finishedName = activeDrillIndex !== null ? getPlan().drills[activeDrillIndex][0] : "Drill";
+      activeDrillIndex = null;
+      activeStartedAt = 0;
+      if (timerStart) {
+        timerStart.disabled = true;
+        timerStart.textContent = "Stop drill";
+      }
+      if (timerLabel) {
+        timerLabel.textContent = markDone ? `${finishedName} finished in ${formatTime(timerSeconds)}.` : "Tap Start timer on a drill. Stop it when you finish.";
+      }
+      updateTimer();
+      render();
+    }
+
+    function clearTimerDisplay() {
+      if (timerId) stopDrillTimer(false);
+      timerSeconds = 0;
+      activeDrillIndex = null;
+      activeStartedAt = 0;
+      if (timerStart) timerStart.disabled = true;
+      if (timerLabel) timerLabel.textContent = "Tap Start timer on a drill. Stop it when you finish.";
+      updateTimer();
+      render();
+    }
+
+    drillList.addEventListener("click", (event) => {
+      const toggle = event.target.closest("[data-toggle]");
+      const timer = event.target.closest("[data-timer]");
+
+      if (toggle) {
+        const index = Number(toggle.dataset.toggle);
+        if (activeDrillIndex === index) {
+          stopDrillTimer(true);
+          return;
+        }
+        const key = keyFor(selectedDay, index);
+        progress[key] = !progress[key];
+        if (!progress[key]) delete drillTimes[timeKeyFor(selectedDay, index)];
+        saveProgress();
+        saveDrillTimes();
+        render();
+      }
+
+      if (timer) {
+        const index = Number(timer.dataset.timer);
+        if (activeDrillIndex === index) stopDrillTimer(true);
+        else startDrillTimer(index);
+      }
+    });
+
+    calendarGrid.addEventListener("click", (event) => {
+      const day = event.target.closest("[data-date]");
+      if (!day) return;
+      selectedLogDate = day.dataset.date;
+      renderCalendar();
+    });
+
+    daySelect.addEventListener("change", () => {
+      if (timerId) stopDrillTimer(false);
+      selectedDay = Number(daySelect.value);
+      render();
+    });
+
+    focusGrid.addEventListener("click", (event) => {
+      const chip = event.target.closest("[data-focus]");
+      if (!chip) return;
+      if (timerId) stopDrillTimer(false);
+      selectedFocus = chip.dataset.focus;
+      render();
+    });
+
+    logWorkout.addEventListener("click", () => {
+      if (getDone(selectedDay) !== getPlan().drills.length) return;
+      const plan = getPlan();
+      const totalSeconds = plan.drills.reduce((sum, drill) => sum + drill[2] * 60, 0);
+      logToday({
+        type: "Workout",
+        title: plan.focus,
+        detail: `${plan.drills.length} drills completed`,
+        seconds: totalSeconds
+      });
+      resetCurrentDrills();
+      render();
+    });
+
+    judgeActivity.addEventListener("click", () => {
+      const text = activityInput.value.trim();
+      if (!text) {
+        activityResult.className = "activity-result is-denied";
+        activityResult.innerHTML = "<strong>Tell me what happened</strong><p>Add what you did, how long, and how competitive it was.</p>";
+        return;
+      }
+      showActivityResult(evaluateActivity(text), text);
+    });
+
+    clearActivity.addEventListener("click", () => {
+      activityInput.value = "";
+      activityResult.className = "activity-result";
+      activityResult.innerHTML = "<strong>Waiting</strong><p>Five minutes of casual shooting will not count. A real pickup game, team practice, scrimmage, or serious solo workout can.</p>";
+    });
+
+    if (timerStart) timerStart.addEventListener("click", () => stopDrillTimer(true));
+    if (timerReset) timerReset.addEventListener("click", clearTimerDisplay);
+    topTabs.forEach((tab) => {
+      tab.addEventListener("click", () => showPage(tab.dataset.page, true));
+    });
+    window.addEventListener("popstate", () => {
+      showPage(window.location.hash.slice(1) || "workout-page");
+    });
+
+    updateTimer();
+    render();
+    showPage(window.location.hash.slice(1) || "workout-page");
+
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>
