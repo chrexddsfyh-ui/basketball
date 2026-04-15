@@ -9,8 +9,8 @@
   <meta name="apple-mobile-web-app-title" content="GRND">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./app-icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./app-icon.svg">
+  <link rel="icon" href="./app-icon-512.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <style>
     :root {
       color-scheme: dark;
@@ -244,15 +244,16 @@
     }
 
     details {
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255, 107, 44, 0.28);
       border-radius: 8px;
-      background: linear-gradient(180deg, #151515, #0d0d0d);
+      background: linear-gradient(180deg, #141414, #0b0b0b);
       overflow: hidden;
+      transition: border-color 160ms ease, background 160ms ease;
     }
 
     summary {
-      min-height: 54px;
-      padding: 12px 14px;
+      min-height: 56px;
+      padding: 13px 14px;
       cursor: pointer;
       list-style: none;
       display: flex;
@@ -260,6 +261,11 @@
       justify-content: space-between;
       gap: 10px;
       font-weight: 900;
+      background: #101010;
+    }
+
+    summary:hover {
+      background: #151515;
     }
 
     summary span {
@@ -283,14 +289,22 @@
     }
 
     summary::after {
-      content: "+";
-      color: var(--court);
-      font-size: 20px;
-      line-height: 1;
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 7px solid var(--court);
+      transform: rotate(0deg);
+      transition: transform 160ms ease;
     }
 
     details[open] summary::after {
-      content: "-";
+      transform: rotate(180deg);
+    }
+
+    details[open] {
+      border-color: rgba(255, 107, 44, 0.52);
     }
 
     .details-body {
@@ -313,12 +327,22 @@
 
     .day-picker select {
       width: 100%;
-      min-height: 48px;
+      min-height: 50px;
       border-radius: 8px;
       border: 1px solid rgba(255, 107, 44, 0.45);
-      background: #101010;
+      appearance: none;
+      background:
+        linear-gradient(45deg, transparent 50%, var(--court) 50%),
+        linear-gradient(135deg, var(--court) 50%, transparent 50%),
+        #101010;
+      background-position:
+        calc(100% - 19px) 21px,
+        calc(100% - 13px) 21px,
+        0 0;
+      background-size: 7px 7px, 7px 7px, 100% 100%;
+      background-repeat: no-repeat;
       color: var(--ink);
-      padding: 0 14px;
+      padding: 0 42px 0 14px;
       font-weight: 900;
       outline: none;
     }
@@ -524,12 +548,8 @@
     }
 
     .focus-panel {
-      display: grid;
-      gap: 10px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #0d0d0d;
+      display: block;
+      padding: 0;
     }
 
     .focus-grid {
@@ -539,15 +559,17 @@
     }
 
     .focus-chip {
-      background: #1c1c1c;
+      background: #181818;
       color: var(--muted);
       border: 1px solid var(--line);
+      min-height: 48px;
     }
 
     .focus-chip.is-active {
       background: var(--court);
       color: var(--black);
       border-color: var(--court);
+      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.16);
     }
 
     .toolbar select {
@@ -983,7 +1005,7 @@
     <header class="app-head">
       <div class="brand-row">
         <div class="brand-mark">
-          <img src="./app-icon.svg" alt="">
+          <img src="./app-icon-512.png" alt="">
           <div>
             <h1>GRND</h1>
             <p>Train, log, repeat.</p>
@@ -1701,7 +1723,8 @@
       const todayWorkouts = workoutLog[dateKey()] || 0;
 
       daySelect.value = selectedDay;
-      if (daySummaryValue) daySummaryValue.textContent = week[selectedDay].day;      focusGrid.querySelectorAll(".focus-chip").forEach((chip) => {
+      if (daySummaryValue) daySummaryValue.textContent = week[selectedDay].day;
+      focusGrid.querySelectorAll(".focus-chip").forEach((chip) => {
         chip.classList.toggle("is-active", chip.dataset.focus === selectedFocus);
       });
       if (focusSummaryValue) {
