@@ -101,12 +101,55 @@
       gap: 10px;
     }
 
-    .brand-mark img {
-      width: 46px;
-      height: 46px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      object-fit: cover;
+   .brand-logo {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #050505;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.logo-ball {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--court);
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(255, 107, 44, 0.45);
+}
+
+.logo-ball::before,
+.logo-ball::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid #050505;
+  border-radius: 50%;
+}
+
+.logo-ball::before {
+  transform: translateX(-18px);
+}
+
+.logo-ball::after {
+  transform: translateX(18px);
+}
+
+.logo-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  background: #050505;
+  transform: translateY(-50%);
+}
+
     }
 
     .header-streak {
